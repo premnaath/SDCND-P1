@@ -13,6 +13,14 @@ The goals / steps of this project are the following:
 * Reflect on your work in a written report
 ---
 
+[Result1]: ./doc/_1_blur_gray.jpg "Grayscale"
+[Result2]: ./doc/_2_edges.jpg "Edges"
+[Result3]: ./doc/_3_masked_edges.jpg "Masked edges"
+[Result4]: ./doc/_4_lines_edges.jpg "Hough lines"
+[Result5]: ./doc/_6_extended_edges.jpg "Extended edges"
+[Result6]: ./doc/_7_filtered_lines_edges.jpg "Filtered lines"
+[Result7]: ./doc/_8_lanes_full.jpg "Full lane"
+
 
 ### Reflection
 
@@ -40,13 +48,13 @@ The 3-channel RGB image has a lot of information. In order for us to begin with 
 
 There can be a lot of noise in the image even after grayscale conversion. Gaussian blur removes such noises and makes it easy for the upcoming steps.
 
-[Result1]: ./doc/_1_blur_gray.jpg "Grayscale"
+![alt text][Result1]
 
 #### 3. Canny to find edges
 
 Canny edge detection(as introduced in Lesson 1) is used next in the pipeline. This function is already available as a helper function from the OpenCV library and it takes the image, low threshold and high threshold(thresholds for intensity) as input. Edges are drawn on areas in the image where a change in intensity is detected(low-to-high or high-to-low). It must be noted that Canny function outputs the edges of every object on the image. Only part of the detected edges are lanes Canny's output has to be reduced.
 
-[Result2]: ./doc/_2_edges.jpg "Edges"
+![alt text][Result2]
 
 #### 4. Region Of Interest(ROI) mask
 
@@ -58,7 +66,7 @@ This is accomplished with the helper functions,
 
 Here a second polygon is also selected to remove certain unwanted lane participants. This is a triangle defined with its vertices. But the purpose of this ROI is to mask-out edge information(on contrary to above mentioned quadrilateral mask). It was noted during testing that there may be bright patches on the road(possibly spillings of lane paints) between the lanes. The presence of these will affect the lane fitting and hence these were removed.
 
-[Result3]: ./doc/_3_masked_edges.jpg "Masked edges"
+![alt text][Result3]
 
 #### 5. Hough line segments
 
@@ -79,7 +87,7 @@ The output of ROI masks will still be edges(as output from Canny) but, constrain
 - line_image = np.copy(image) * 0
 	- This is the blank image where the lines are drawn on.
 
-[Result4]: ./doc/_4_lines_edges.jpg "Hough lines"
+![alt text][Result4]
 
 #### 6. Pre-process line segments
 
@@ -135,7 +143,7 @@ This method consists of 3 steps,
 
 The same method mentioned in Section 4 is used here except for a different polygon, a triangle in this case. This triangle is drawn with its base overlaying on top of the quadrialteral used in ROI mask 1, but extended 15 pixels more in the left and right direction. The height of this triangle is set to 30 pixels. We fill this triangle with a cv2.fillPoly() method and do an intersection with Canny edges using cv2.bitwise_and(). The output of this procedure will be edges.
 
-[Result5]: ./doc/_6_extended_edges.jpg "Extended edges"
+![alt text][Result5]
 
 #### Draw Hough lines
 
@@ -152,7 +160,7 @@ Next we classify candidates for left and right lanes with the use of its slope. 
 
 After classification, a first order polynomial is modelled using numpy.polyfit(). If the slope of this model is very close to the slope of any of the lanes, then those extended line segments can be used for extending the lanes.
 
-[Result6]: ./doc/_7_filtered_lines_edges.jpg "Filtered lines"
+![alt text][Result6]
 
 Extending is done by averaging all the y-positions of the extended line segment. This method introduces some noise on the extension and hence only half the average of y-positions is used.
 
@@ -164,7 +172,7 @@ A blank copy of the image is made to write the extended lanes on. Then this imag
 
 If you'd like to include images to show how the pipeline works, here is how to include an image: 
 
-[Result7]: ./doc/_8_lanes_full.jpg "Full lane"
+![alt text][Result7]
 
 
 ### 2. Potential shortcomings with current pipeline
